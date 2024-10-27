@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 // console.log('Current Environment of abid:', process.env.NODE_ENV);
-// console.log('Current Environment of PORT:', process.env.PORT);
+// console.log('Current Environment of PORT:', process.env.PORT)
 // console.log('Current Environment All :', process.env);
 
 const app: Application = express();
