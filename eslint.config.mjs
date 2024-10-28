@@ -38,7 +38,7 @@ export default [
         },
       ],
       'no-duplicate-imports': 'error',
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
 
       // Code Style
       eqeqeq: ['error', 'always', { null: 'ignore' }],
@@ -53,7 +53,7 @@ export default [
       semi: ['error', 'always'],
       quotes: [
         'error',
-        'double',
+        'single',
         {
           avoidEscape: true,
           allowTemplateLiterals: true,

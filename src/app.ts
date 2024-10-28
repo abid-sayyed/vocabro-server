@@ -16,5 +16,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is Fire at http://localhost:${port}`);
+  if (process.env.NODE_ENV === 'development') {
+    console.info(`Server is Fire at http://localhost:${port}`);
+  }
 });
