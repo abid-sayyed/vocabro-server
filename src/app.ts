@@ -1,6 +1,9 @@
 import express, { Request, Response, Application } from 'express';
 import dotenv from 'dotenv';
 
+//routes
+import books from './api/routes/booksRoutes';
+
 //For env File
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -14,6 +17,8 @@ const port = process.env.PORT;
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
 });
+
+app.use('/api', books);
 
 app.listen(port, () => {
   if (process.env.NODE_ENV === 'development') {
