@@ -1,47 +1,46 @@
+import '@config/envConfig';
 import express, { Request, Response, Application } from 'express';
 import cors from 'cors';
-
-import dotenv from 'dotenv';
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
-
-import sequelize from './database/connection';
-
-//routes
+import sequelize from './database/connection'; // Ensure your sequelize connection is set up correctly
 import books from './api/routes/booksRoutes';
-
-// console.log('Current Environment of abid:', process.env.NODE_ENV);
-// console.log('Current Environment of PORT:', process.env.PORT)
-// console.log('Current Environment All :', process.env);
 
 const app: Application = express();
 const port = process.env.PORT;
 
+// CORS configuration
 const corsOptions = {
   origin: process.env.Frontend_URL,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
-  allowedHeaders: ['Content-Type'], // Allow specific headers
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
 };
-app.use(cors(corsOptions));
 
+// Middleware setup
+app.use(cors(corsOptions));
+app.use(express.json());
+
+// Health check route
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
 });
 
+// API routes
 app.use('/api', books);
 
-app.listen(port, () => {
-  if (process.env.NODE_ENV === 'development') {
-    console.info(`Server is Fire at http://localhost:${port}`);
-  }
-});
-
-const run = async () => {
+// Function to start the server and sync the database
+const startServer = async () => {
   try {
-    await sequelize.sync({ force: true }); // `force: true` drops the table if it exists and recreates it
+    await sequelize.sync(); // Avoid using { force: true } in production to prevent data loss
     console.info('Database & tables created!');
+
+    app.listen(port, () => {
+      if (process.env.NODE_ENV === 'development') {
+        console.info(`Server is Fire at http://localhost:${port}`);
+      }
+    });
   } catch (error) {
     console.error('Error syncing database:', error);
   }
 };
 
-run();
+// Start the server
+startServer();

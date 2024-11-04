@@ -30,7 +30,6 @@ const getBooks = async (req: Request, res: Response) => {
 //@desc Upload a Book
 //@route POST /api/books
 //@access Public  //have to make it private using authetication
-
 const postBook = async (req: Request, res: Response) => {
   uploadFolder.single('file')(req, res, (err) => {
     const { title } = req.body;
