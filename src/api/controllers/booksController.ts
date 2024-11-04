@@ -32,7 +32,9 @@ const getBooks = async (req: Request, res: Response) => {
 //@access Public  //have to make it private using authetication
 
 const postBook = async (req: Request, res: Response) => {
-  uploadFolder.single('book')(req, res, (err) => {
+  uploadFolder.single('file')(req, res, (err) => {
+    const { title } = req.body;
+    console.info('title:', title);
     if (err) {
       return res
         .status(400)

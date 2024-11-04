@@ -1,10 +1,9 @@
 import express, { Request, Response, Application } from 'express';
+import cors from 'cors';
 
 import dotenv from 'dotenv';
-//For env File
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
-// import Book from './database/models/books';
 import sequelize from './database/connection';
 
 //routes
@@ -16,6 +15,13 @@ import books from './api/routes/booksRoutes';
 
 const app: Application = express();
 const port = process.env.PORT;
+
+const corsOptions = {
+  origin: process.env.Frontend_URL,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
+  allowedHeaders: ['Content-Type'], // Allow specific headers
+};
+app.use(cors(corsOptions));
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Express & TypeScript Server');
