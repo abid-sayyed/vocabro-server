@@ -29,7 +29,7 @@ app.use('/api', books);
 // Function to start the server and sync the database
 const startServer = async () => {
   try {
-    await sequelize.sync(); // Avoid using { force: true } in production to prevent data loss
+    await sequelize.sync({ alter: true }); // Avoid using { force: true } in production to prevent data loss
     console.info('Database & tables created!');
 
     app.listen(port, () => {

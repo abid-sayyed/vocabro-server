@@ -7,6 +7,8 @@
       "@api/*": ["src/api/*"],
       "@config/*": ["src/config/*"],
       "@database/*": ["src/database/*"],
+      "@models/*": ["src/database/models/*"],
+      
     },
     "outDir": "./dist",
     "rootDir": "./src",

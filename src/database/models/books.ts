@@ -4,7 +4,7 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript';
   tableName: 'books',
   modelName: 'Books',
 }) // Optional: specify the table name
-class Book extends Model {
+class Books extends Model {
   @Column({
     primaryKey: true, // Explicitly stating primary key as a parameter
     type: DataType.UUID,
@@ -17,6 +17,9 @@ class Book extends Model {
 
   @Column(DataType.STRING)
   declare fileName: string;
+
+  @Column(DataType.STRING)
+  declare fileURL: string;
 }
 
-export default Book;
+export default Books;

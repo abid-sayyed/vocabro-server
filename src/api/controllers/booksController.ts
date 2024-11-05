@@ -2,18 +2,17 @@ import { Request, Response } from 'express';
 import path from 'path';
 import { BASE_PATH } from '@config/pathConfig';
 import multer from 'multer';
+import Books from '@models/books';
 
 const pdfBasePath = path.join(BASE_PATH, 'uploads', 'pdfs');
-console.log('pdfBasePathres:', pdfBasePath);
 
 // Custom storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, pdfBasePath); // Directory where files will be saved
+    cb(null, pdfBasePath);
   },
   filename: (req, file, cb) => {
-    // Create a unique filename with timestamp
-    cb(null, Date.now() + path.extname(file.originalname)); // Append original file extension
+    cb(null, file.originalname);
   },
 });
 
@@ -27,20 +26,40 @@ const getBooks = async (req: Request, res: Response) => {
   res.sendFile(pdfFile);
 };
 
+//@desc Get a Book URL
+//@route GET /api/books
+//@access Public  //have to make it private using authetication
+const getBookURL = async (req: Request, res: Response) => {
+  const { bookURL } = req.params;
+  const pdfFile = path.join(pdfBasePath, bookURL);
+  res.sendFile(pdfFile);
+};
+
 //@desc Upload a Book
 //@route POST /api/books
-//@access Public  //have to make it private using authetication
+//@access Public  //have to make it private using authentication
 const postBook = async (req: Request, res: Response) => {
-  uploadFolder.single('file')(req, res, (err) => {
-    const { title } = req.body;
-    console.info('title:', title);
+  uploadFolder.single('file')(req, res, async (err) => {
     if (err) {
       return res
         .status(400)
         .json({ message: 'Failed to upload file', error: err });
     }
-    return res.status(200).json({ message: 'File uploaded successfully' });
+
+    const requestData = JSON.parse(req.body.requestData);
+    const title = requestData.title;
+
+    const fileName = req.file?.originalname;
+    const fileURL = req.file?.path;
+
+    // Create a new book entry in the database
+    const newBook = await Books.create({ title, fileName, fileURL });
+
+    return res.status(201).json({
+      message: 'File uploaded and book created successfully',
+      book: newBook,
+    });
   });
 };
 
-export { getBooks, postBook };
+export { getBooks, postBook, getBookURL };
