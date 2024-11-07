@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { BASE_PATH } from '@config/pathConfig';
 import multer from 'multer';
@@ -18,47 +18,53 @@ const storage = multer.diskStorage({
 
 const uploadFolder = multer({ storage });
 
-//@desc Get all Books  // for now only one book is served
-//@route GET /api/books
-//@access Public  //have to make it private using authetication
+/**
+ * @desc Get all Books (Currently only one book is served)
+ * @route GET /api/books
+ * @access Public
+ */
 const getBooks = async (req: Request, res: Response) => {
-  const pdfFile = path.join(pdfBasePath, 'abid_resume.pdf');
-  res.sendFile(pdfFile);
+  const books = await Books.findAll();
+  res.status(200).json(books);
 };
 
-//@desc Get a Book URL
-//@route GET /api/books
-//@access Public  //have to make it private using authetication
+/**
+ * @desc Get a Book URL (e.g., to download or view the book PDF)
+ * @route GET /api/books/:bookURL
+ * @access Public
+ */
 const getBookURL = async (req: Request, res: Response) => {
   const { bookURL } = req.params;
   const pdfFile = path.join(pdfBasePath, bookURL);
   res.sendFile(pdfFile);
 };
 
-//@desc Upload a Book
-//@route POST /api/books
-//@access Public  //have to make it private using authentication
-const postBook = async (req: Request, res: Response) => {
+/**
+ * @desc  Upload a Book
+ * @route  POST /api/books
+ * @access Public  //have to make it private using authentication
+ */
+const postBook = async (req: Request, res: Response, next: NextFunction) => {
   uploadFolder.single('file')(req, res, async (err) => {
     if (err) {
-      return res
-        .status(400)
-        .json({ message: 'Failed to upload file', error: err });
+      return next(err);
     }
 
-    const requestData = JSON.parse(req.body.requestData);
-    const title = requestData.title;
+    try {
+      const requestData = JSON.parse(req.body.requestData);
+      const title = requestData.title;
+      const fileName = req.file?.originalname;
+      const fileURL = req.file?.path;
 
-    const fileName = req.file?.originalname;
-    const fileURL = req.file?.path;
+      const newBook = await Books.create({ title, fileName, fileURL });
 
-    // Create a new book entry in the database
-    const newBook = await Books.create({ title, fileName, fileURL });
-
-    return res.status(201).json({
-      message: 'File uploaded and book created successfully',
-      book: newBook,
-    });
+      return res.status(201).json({
+        message: 'File uploaded and book created successfully',
+        book: newBook,
+      });
+    } catch (dbError) {
+      return next(dbError);
+    }
   });
 };
 

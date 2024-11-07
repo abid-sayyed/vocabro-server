@@ -3,7 +3,7 @@ import { getBooks, postBook, getBookURL } from '../controllers/booksController';
 
 const router = express.Router();
 
-//get all books
+//get all booksa
 router.get('/books', getBooks);
 
 //get book url
