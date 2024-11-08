@@ -45,6 +45,11 @@ const getBookURL = async (req: Request, res: Response) => {
  * @access Public  //have to make it private using authentication
  */
 const postBook = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.file || !req.body.requestData) {
+    res.statusCode = 400;
+    next(new Error());
+  }
+
   uploadFolder.single('file')(req, res, async (err) => {
     if (err) {
       return next(err);
