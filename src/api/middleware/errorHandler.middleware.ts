@@ -17,8 +17,8 @@ export default function errorHandler(
   // Handling Custom Errors
   if (error instanceof CustomError) {
     res.status(error.statusCode).json({
-      title: error.code || 'Custom Error',
-      message: error.message,
+      message: error.message || 'Custom Error',
+      code: error.code,
     });
     return;
   }
@@ -31,28 +31,31 @@ export default function errorHandler(
       case 400: // Bad Request (validation errors)
         res.status(400).json({
           title: 'Validation Failed',
-          message: 'Invalid request data',
+          message: error.message || 'Invalid request data',
         });
         break;
 
       case 401: // Unauthorized
         res.status(401).json({
           title: 'Unauthorized',
-          message: 'Authentication is required',
+          message: error.message || 'Authentication is required',
         });
         break;
 
       case 403: // Forbidden
         res.status(403).json({
           title: 'Forbidden',
-          message: 'You do not have permission to access this resource',
+          message:
+            error.message ||
+            'You do not have permission to access this resource',
         });
         break;
 
       case 404: // Not Found
         res.status(404).json({
           title: 'Not Found',
-          message: 'The resource you requested could not be found',
+          message:
+            error.message || 'The resource you requested could not be found',
         });
         break;
 
@@ -60,6 +63,7 @@ export default function errorHandler(
         res.status(500).json({
           title: 'Internal Server Error',
           message:
+            error.message ||
             'Something went wrong on the server, please try again later.',
         });
         break;
@@ -67,14 +71,14 @@ export default function errorHandler(
       default:
         res.status(500).json({
           title: 'Internal Server Error',
-          message: 'An unexpected error occurred',
+          message: error.message || 'An unexpected error occurred',
         });
         break;
     }
   } else {
     // If the error is not an instance of Error, return a generic message
     res.status(500).json({
-      title: 'Internal Server Error abid',
+      title: 'Internal Server Error',
       message:
         getErrorMessage(error) ||
         'An error occurred. Please view logs for more details',

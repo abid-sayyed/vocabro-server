@@ -2,13 +2,24 @@
   "compilerOptions": {
     "baseUrl": ".", // Sets the root directory for module resolution
     "paths": {
-      "@root/*": ["*"],                       
-      "@src/*": ["src/*"],
-      "@api/*": ["src/api/*"],
-      "@config/*": ["src/config/*"],
-      "@database/*": ["src/database/*"],
-      "@models/*": ["src/database/models/*"],
-      
+      "@root/*": [
+        "*"
+      ],
+      "@src/*": [
+        "src/*"
+      ],
+      "@api/*": [
+        "src/api/*"
+      ],
+      "@config/*": [
+        "src/config/*"
+      ],
+      "@database/*": [
+        "src/database/*"
+      ],
+      "@models/*": [
+        "src/database/models/*"
+      ],
     },
     "outDir": "./dist",
     "rootDir": "./src",
@@ -20,20 +31,17 @@
     "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
     "strict": true, /* Enable all strict type-checking options. */
     "skipLibCheck": true, /* Skip type checking all .d.ts files. */
-
-
-
-
   },
   "include": [
     "src"
   ],
   "exclude": [
     "node_modules"
-  ]
- 
+  ],
+  "ts-node": {
+    "files": true
+  }
 }
-
 //more options
 /* Visit https://aka.ms/tsconfig to read more about this file */
 /* Projects */
