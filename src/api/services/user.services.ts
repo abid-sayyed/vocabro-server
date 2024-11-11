@@ -1,6 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '@models/user.model'; // Adjust the import based on your actual file path
 
+const checkIfFieldIsEmpty = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void | Response> => {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    res.statusCode = 400;
+    next(new Error('Fields cannot be empty'));
+  }
+};
+
 // Check if the username or email already exists
 const checkIfUserNameExists = async (
   req: Request,
@@ -22,4 +34,4 @@ const checkIfUserNameExists = async (
   }
 };
 
-export { checkIfUserNameExists };
+export { checkIfFieldIsEmpty, checkIfUserNameExists };
