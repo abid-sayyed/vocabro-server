@@ -1,7 +1,16 @@
-import { Table, Column, Model, DataType, Index } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  Index,
+  BeforeCreate,
+  BeforeUpdate,
+} from 'sequelize-typescript';
+import bcrypt from 'bcryptjs';
 
 @Table({
-  tableName: 'users',
+  tableName: 'user',
   modelName: 'User',
   paranoid: true,
 })
@@ -55,6 +64,22 @@ class User extends Model {
 
   @Column(DataType.DATE)
   declare last_logout: Date;
+
+  @BeforeUpdate
+  @BeforeCreate
+  static async hashPasswordBeforeCreate(user: User) {
+    if (user.password) {
+      const salt = bcrypt.genSaltSync(10);
+      user.password = await bcrypt.hash(user.password, salt);
+    }
+  }
+
+  async validatePassword(
+    instance: User,
+    plainPassword: string,
+  ): Promise<boolean> {
+    return bcrypt.compare(plainPassword, instance.password);
+  }
 }
 
 export default User;

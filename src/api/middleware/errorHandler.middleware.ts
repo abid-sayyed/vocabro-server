@@ -35,6 +35,13 @@ export default function errorHandler(
         });
         break;
 
+      case 409: // Conflict (resource already exists)
+        res.status(409).json({
+          title: 'Conflict',
+          message: error.message || 'Resource already exists',
+        });
+        break;
+
       case 401: // Unauthorized
         res.status(401).json({
           title: 'Unauthorized',

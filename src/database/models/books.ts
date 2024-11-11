@@ -1,9 +1,9 @@
 import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table({
-  tableName: 'books',
-  modelName: 'Books',
-}) // Optional: specify the table name
+  tableName: 'books', //for database table name
+  modelName: 'Books', //for model name
+})
 class Books extends Model {
   @Column({
     primaryKey: true, // Explicitly stating primary key as a parameter
