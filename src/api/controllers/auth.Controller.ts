@@ -3,6 +3,7 @@ import User from '@models/user.model';
 import {
   checkIfUserNameExists,
   checkIfFieldIsEmpty,
+  userAuthentications,
 } from '@api/services/user.services';
 
 /**
@@ -11,37 +12,25 @@ import {
  * @access Public
  */
 const login = async (req: Request, res: Response, next: NextFunction) => {
-  await checkIfFieldIsEmpty(req, res, next);
-
   const { username, email, password } = req.body;
 
-  const user = await User.findOne({
-    where: {
-      [email ? 'email' : 'username']: email || username,
-    },
-  });
-
-  if (!user) {
-    res.statusCode = 404;
-    next(new Error('user not found'));
+  if (!username || !email || !password) {
+    res.statusCode = 400;
+    next(new Error('Fields cannot be empty'));
     return;
   }
 
-  const isPasswordValid = await user.validatePassword(user, password);
-  if (!isPasswordValid) {
-    res.statusCode = 401;
-    next(new Error('Invalid password'));
-    return;
+  const result = await userAuthentications(username, email, password);
+  if (result.statusCode !== 200) {
+    res.statusCode = result.statusCode;
+    next(new Error(result.message));
   }
 
-  // // Generate tokens
-  // const accessToken = generateAccessToken(user._id);
-  // const refreshToken = generateRefreshToken(user._id);
-
+  const { accessToken, refreshToken } = result;
   res.status(200).json({
     message: 'Post request to the login: user found',
-    username: user.username,
-    email: user.email,
+    accessToken,
+    refreshToken,
   });
 };
 

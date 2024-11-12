@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '@models/user.model'; // Adjust the import based on your actual file path
+import User from '@models/user.model';
+import { generateAccessToken, generateRefreshToken } from '@utils/jwt.utils';
 
 const checkIfFieldIsEmpty = async (
   req: Request,
@@ -34,4 +35,37 @@ const checkIfUserNameExists = async (
   }
 };
 
-export { checkIfFieldIsEmpty, checkIfUserNameExists };
+const userAuthentications = async (
+  userName: string,
+  email: string,
+  password: string,
+) => {
+  const user = await User.findOne({
+    where: {
+      [email ? 'email' : 'username']: email || userName,
+    },
+  });
+
+  if (!user) {
+    return { message: 'user not found', statusCode: 404 };
+  }
+
+  const isPasswordValid = await user.validatePassword(user, password);
+  if (!isPasswordValid) {
+    return { message: 'Invalid password', statusCode: 401 };
+  }
+
+  // Generate tokens
+  const accessToken = generateAccessToken(user._id);
+  const refreshToken = generateRefreshToken(user._id);
+
+  user.update({ refresh_token: refreshToken });
+
+  return {
+    accessToken,
+    refreshToken,
+    statusCode: 200,
+  };
+};
+
+export { checkIfFieldIsEmpty, checkIfUserNameExists, userAuthentications };

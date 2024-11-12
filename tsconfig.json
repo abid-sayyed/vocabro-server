@@ -20,6 +20,9 @@
       "@models/*": [
         "src/database/models/*"
       ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
     },
     "outDir": "./dist",
     "rootDir": "./src",
