@@ -21,6 +21,8 @@ const startServer = async () => {
   // Middleware setup
   app.use(cors(corsOptions));
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
   app.use(passport.initialize()); // Initialize passport
 
   // Health check route

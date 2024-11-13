@@ -1,22 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { BASE_PATH } from '@config/pathConfig';
-import multer from 'multer';
 import Book from '@root/src/database/models/book.model';
+import {
+  uploadFolder,
+  createBookService,
+} from '@root/src/api/services/book.service';
 
 const pdfBasePath = path.join(BASE_PATH, 'uploads', 'pdfs');
-
-// Custom storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, pdfBasePath);
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-
-const uploadFolder = multer({ storage });
 
 /**
  * @desc Get all Books (Currently only one book is served)
@@ -45,31 +36,36 @@ const getBookURL = async (req: Request, res: Response) => {
  * @access Public  //have to make it private using authentication
  */
 const postBook = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.file || !req.body.requestData) {
-    res.statusCode = 400;
-    next(new Error());
-  }
-
   uploadFolder.single('file')(req, res, async (err) => {
+    if (!req.file || !req.body.requestData) {
+      res.statusCode = 400;
+      next(new Error('File and request data are required'));
+      return;
+    }
+
     if (err) {
-      return next(err);
+      next(err);
+      return;
     }
 
-    try {
-      const requestData = JSON.parse(req.body.requestData);
-      const title = requestData.title;
-      const fileName = req.file?.originalname;
-      const fileURL = req.file?.path;
+    const requestData = JSON.parse(req.body.requestData);
+    const { statusCode, message, newBook } = await createBookService(
+      requestData.title,
+      req.file,
+    );
 
-      const newBook = await Book.create({ title, fileName, fileURL });
-
-      return res.status(201).json({
-        message: 'File uploaded and book created successfully',
-        book: newBook,
-      });
-    } catch (dbError) {
-      return next(dbError);
+    // If the book wasn't created successfully, pass error to Express error handler
+    if (statusCode !== 201) {
+      res.status(statusCode);
+      next(new Error(message));
+      return;
     }
+
+    // Return success response
+    res.status(201).json({
+      message: 'File uploaded and book created successfully',
+      book: newBook,
+    });
   });
 };
 
