@@ -10,7 +10,7 @@ import {
 import bcrypt from 'bcryptjs';
 
 @Table({
-  tableName: 'user',
+  tableName: 'users',
   modelName: 'User',
   paranoid: true,
 })
@@ -68,9 +68,8 @@ class User extends Model {
   @BeforeUpdate
   @BeforeCreate
   static async hashPasswordBeforeCreate(user: User) {
-    if (user.password) {
-      const salt = bcrypt.genSaltSync(10);
-      user.password = await bcrypt.hash(user.password, salt);
+    if (user.password && user.changed('password')) {
+      user.password = await bcrypt.hash(user.password, 10);
     }
   }
 

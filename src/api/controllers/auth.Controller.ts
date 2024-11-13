@@ -1,10 +1,36 @@
 import { NextFunction, Request, Response } from 'express';
-import User from '@models/user.model';
 import {
-  checkIfUserNameExists,
-  checkIfFieldIsEmpty,
+  userRegistration,
   userAuthentications,
-} from '@api/services/user.services';
+  generateNewAccessToken,
+} from '@root/src/api/services/user.service';
+
+/**
+ * @desc register
+ * @route post /api/user/register
+ * @access Public
+ */
+const register = async (req: Request, res: Response, next: NextFunction) => {
+  const { username, email, password } = req.body;
+
+  if (!username || !email || !password) {
+    res.statusCode = 400;
+    next(new Error('Fields cannot be empty'));
+    return;
+  }
+
+  const newUser = await userRegistration(username, email, password);
+
+  if (newUser.statusCode !== 200) {
+    res.statusCode = newUser.statusCode;
+    next(new Error(newUser.message));
+    return;
+  }
+  res.status(200).json({
+    message: 'Post request to the register: user created',
+    newUser,
+  });
+};
 
 /**
  * @desc login
@@ -35,20 +61,37 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
- * @desc register
- * @route post /api/user/register
- * @access Public
+ * @desc refreshToken
+ * @route post /api/refresh-token
+ * @access private
  */
-const register = async (req: Request, res: Response, next: NextFunction) => {
-  const { username, email, password } = req.body;
 
-  await checkIfFieldIsEmpty(req, res, next);
-  await checkIfUserNameExists(req, res, next);
+const refreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { refreshToken } = req.body;
 
-  const newUser = await User.create({ username, email, password });
-  res
-    .status(200)
-    .json({ message: 'Post request to the login', nweUser: newUser });
+  if (!refreshToken) {
+    res.statusCode = 400;
+    next(new Error('Refresh token is empty'));
+    return;
+  }
+
+  const newToken = await generateNewAccessToken(refreshToken);
+  if (newToken.statusCode !== 200) {
+    res.statusCode = newToken.statusCode;
+    next(new Error(newToken.message));
+    return;
+  }
+
+  const { newAccessToken, newRefreshToken } = newToken;
+  res.status(200).json({
+    message: 'Post request to the login: user found',
+    newAccessToken,
+    newRefreshToken,
+  });
 };
 
-export { login, register };
+export { register, login, refreshToken };

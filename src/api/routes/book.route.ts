@@ -1,12 +1,10 @@
 import express from 'express';
-import { getBooks, postBook, getBookURL } from '../controllers/booksController';
+import { getBooks, postBook, getBookURL } from '../controllers/book.Controller';
 
 const router = express.Router();
 
-//get all booksa
 router.get('/books', getBooks);
 
-//get book url
 router.get('/book/:bookURL', getBookURL);
 
 router.post('/books', postBook);

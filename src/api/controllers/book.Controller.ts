@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { BASE_PATH } from '@config/pathConfig';
 import multer from 'multer';
-import Books from '@models/books';
+import Book from '@root/src/database/models/book.model';
 
 const pdfBasePath = path.join(BASE_PATH, 'uploads', 'pdfs');
 
@@ -24,7 +24,7 @@ const uploadFolder = multer({ storage });
  * @access Public
  */
 const getBooks = async (req: Request, res: Response) => {
-  const books = await Books.findAll();
+  const books = await Book.findAll();
   res.status(200).json(books);
 };
 
@@ -61,7 +61,7 @@ const postBook = async (req: Request, res: Response, next: NextFunction) => {
       const fileName = req.file?.originalname;
       const fileURL = req.file?.path;
 
-      const newBook = await Books.create({ title, fileName, fileURL });
+      const newBook = await Book.create({ title, fileName, fileURL });
 
       return res.status(201).json({
         message: 'File uploaded and book created successfully',

@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import books from '@api/routes/booksRoutes';
+import books from '@root/src/api/routes/book.route';
 import user from '@api/routes/auth.route';
 
 const router: Router = express.Router();
