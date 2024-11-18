@@ -5,6 +5,7 @@ import sequelize from './database/connection';
 import errorHandler from '@api/middleware/errorHandler.middleware';
 import apiRoutes from '@api/routes/index';
 import passport from '@api/middleware/passport.middleware';
+import cookieParser from 'cookie-parser';
 
 const port = process.env.PORT;
 
@@ -15,11 +16,13 @@ const startServer = async () => {
   const corsOptions = {
     origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   };
 
   // Middleware setup
   app.use(cors(corsOptions));
+  app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
@@ -34,9 +37,11 @@ const startServer = async () => {
 
   // A protected route that requires a valid JWT token
   app.get(
-    '/protected',
+    '/api/protected',
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
+      console.log('Cookies received: rotue refresh token:', req.cookies); // Logs the cookies sent from the frontend
+
       // If the token is valid, the payload (user info) will be available in req.user
       res.json({
         message: 'Access granted',

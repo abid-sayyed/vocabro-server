@@ -42,7 +42,18 @@ const userRegistration = async (
   }
 
   const newUser = await User.create({ username, email, password });
-  return { newUser, statusCode: 200 };
+
+  const accessToken = generateAccessToken(newUser._id);
+  const refreshToken = generateRefreshToken(newUser._id);
+
+  newUser.update({ refresh_token: refreshToken });
+
+  return {
+    newUser,
+    accessToken,
+    refreshToken,
+    statusCode: 200,
+  };
 };
 
 const userAuthentications = async (

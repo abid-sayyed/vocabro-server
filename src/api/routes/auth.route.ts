@@ -13,10 +13,14 @@ router.post('/register', register);
 
 router.post('/login', login);
 
+router.post('/refresh-token', refreshToken);
+
 router.post(
-  '/refresh-token',
+  '/is-authenticated',
   passport.authenticate('jwt', { session: false }),
-  refreshToken,
+  (req, res) => {
+    res.status(200).json({ message: 'user is auhtenticated' });
+  },
 );
 
 router.post('/forgot-password', (req, res) => {

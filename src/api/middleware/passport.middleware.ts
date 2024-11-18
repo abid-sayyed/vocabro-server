@@ -1,14 +1,15 @@
 // middlewares/passport.middleware.ts
+import { Request } from 'express';
 import passport from 'passport';
-import {
-  Strategy as JwtStrategy,
-  ExtractJwt,
-  StrategyOptions,
-} from 'passport-jwt';
+import { Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
 // import User from '@models/user.model';
 
+const cookieExtractor = (req: Request): string | null => {
+  return req?.cookies?.accessToken || null; // Make sure to use the correct cookie name
+};
+
 const options: StrategyOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: cookieExtractor,
   secretOrKey: process.env.JWT_SECRET as string,
 };
 
