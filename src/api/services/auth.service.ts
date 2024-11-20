@@ -110,6 +110,7 @@ const generateNewAccessToken = async (refreshToken: string) => {
     };
   }
   const newRefreshToken = generateRefreshToken(user._id);
+  console.log('new refresh token updated in database:', newRefreshToken);
   await user.update({ refresh_token: newRefreshToken });
 
   const newAccessToken = generateAccessToken(user._id);

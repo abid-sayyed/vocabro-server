@@ -3,6 +3,7 @@ import {
   register,
   login,
   refreshToken,
+  logout,
 } from '@api/controllers/auth.Controller';
 
 import passport from '@api/middleware/passport.middleware';
@@ -14,6 +15,12 @@ router.post('/register', register);
 router.post('/login', login);
 
 router.post('/refresh-token', refreshToken);
+
+router.post(
+  '/logout',
+  passport.authenticate('jwt', { session: false }),
+  logout,
+);
 
 router.post(
   '/is-authenticated',

@@ -3,8 +3,7 @@ import {
   userRegistration,
   userAuthentications,
   generateNewAccessToken,
-} from '@root/src/api/services/user.service';
-
+} from '@api/services/auth.service';
 /**
  * @desc register
  * @route post /api/user/register
@@ -57,9 +56,15 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 const login = async (req: Request, res: Response, next: NextFunction) => {
   const { username, email, password } = req.body;
 
-  if (!username || !email || !password) {
+  if (!password) {
     res.statusCode = 400;
-    next(new Error('Fields cannot be empty'));
+    next(new Error('Password is required'));
+    return;
+  }
+
+  if (!email && !username) {
+    res.statusCode = 400;
+    next(new Error('Either email or username must be provided'));
     return;
   }
 
@@ -70,6 +75,21 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   const { accessToken, refreshToken } = result;
+
+  res.cookie('accessToken', result.accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // secure cookies (https) in production
+    sameSite: 'strict',
+    maxAge: 15 * 60 * 1000, // token expiration (15 mins here)
+  });
+
+  res.cookie('refreshToken', result.refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week here / 7 days
+  });
+
   res.status(200).json({
     message: 'Post request to the login: user found',
     accessToken,
@@ -128,4 +148,46 @@ const refreshToken = async (
   });
 };
 
-export { register, login, refreshToken };
+/**
+ * @desc logout
+ * @route post /api/logout
+ * @access private
+ */
+
+const logout = async (req: Request, res: Response) => {
+  // Explicitly set the cookies with empty values and immediate expiration
+  res.cookie('accessToken', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    expires: new Date(0), // Expire immediately
+  });
+
+  res.cookie('refreshToken', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    expires: new Date(0),
+  });
+
+  // Also use res.clearCookie for additional compatibility
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+
+  // Respond to the client
+  res.status(200).json({
+    status: 200,
+    message: 'User logged out',
+  });
+};
+
+export { register, login, refreshToken, logout };
