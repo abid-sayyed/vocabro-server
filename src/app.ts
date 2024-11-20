@@ -40,8 +40,6 @@ const startServer = async () => {
     '/api/protected',
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
-      console.log('Cookies received: rotue refresh token:', req.cookies); // Logs the cookies sent from the frontend
-
       // If the token is valid, the payload (user info) will be available in req.user
       res.json({
         message: 'Access granted',

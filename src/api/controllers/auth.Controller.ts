@@ -10,9 +10,6 @@ import {
  * @access Public
  */
 const register = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('register', req.body);
-  console.log('Cookies received:', req.cookies); // Logs the cookies sent from the frontend
-
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
@@ -108,7 +105,6 @@ const refreshToken = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log('Cookies received: rotue refresh token:', req.cookies); // Logs the cookies sent from the frontend
   const refreshToken = req?.cookies?.refreshToken || null;
 
   if (!refreshToken) {
