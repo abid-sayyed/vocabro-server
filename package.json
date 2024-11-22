@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "set NODE_ENV=production&&tsc && node dist/app.js",
+    "start": "set NODE_ENV=production&&tsc && node -r tsconfig-paths/register dist/app.js",
     "dev": "set NODE_ENV=development&&nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist",

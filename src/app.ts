@@ -1,4 +1,5 @@
-import '@config/envConfig';
+import dotenv from 'dotenv';
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 import express, { Request, Response, Application } from 'express';
 import cors from 'cors';
 import sequelize from './database/connection';

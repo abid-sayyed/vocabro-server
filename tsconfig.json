@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // Sets the root directory for module resolution
+    "baseUrl": "./src", // Sets the root directory for module resolution
     "paths": {
       "@root/*": [
         "*"
