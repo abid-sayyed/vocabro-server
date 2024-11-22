@@ -10,6 +10,8 @@ import cookieParser from 'cookie-parser';
 
 const port = process.env.PORT;
 
+console.log('portabid', process.env.NODE_ENV);
+
 const startServer = async () => {
   const app: Application = express();
 

@@ -1,5 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
-import path from 'path';
+// import path from 'path';
+import User from '@models/user.model';
+import Book from '@models/book.model';
 
 const sequelize = new Sequelize({
   dialect: 'mysql',
@@ -8,7 +10,7 @@ const sequelize = new Sequelize({
   database: process.env.DB_NAME,
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
-  models: [path.join(__dirname, '/models')],
+  models: [User, Book],
 });
 
 export default sequelize;

@@ -1,11 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { BASE_PATH } from '@config/pathConfig';
-import Book from '@root/src/database/models/book.model';
-import {
-  uploadFolder,
-  createBookService,
-} from '@root/src/api/services/book.service';
+import Book from '@database/models/book.model';
+import { uploadFolder, createBookService } from '@api/services/book.service';
 
 const pdfBasePath = path.join(BASE_PATH, 'uploads', 'pdfs');
 

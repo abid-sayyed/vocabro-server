@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "set NODE_ENV=production&&tsc && node -r tsconfig-paths/register dist/app.js",
+    "start": "set NODE_ENV=production&&tsc && tsx dist/app.js",
     "dev": "set NODE_ENV=development&&nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist",
@@ -55,6 +55,7 @@
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.11.0"
   }

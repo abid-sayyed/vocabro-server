@@ -1,7 +1,7 @@
 import path from 'path';
 import { BASE_PATH } from '@config/pathConfig';
 import multer from 'multer';
-import Book from '@root/src/database/models/book.model';
+import Book from '@database/models/book.model';
 
 const pdfBasePath = path.join(BASE_PATH, 'uploads', 'pdfs');
 

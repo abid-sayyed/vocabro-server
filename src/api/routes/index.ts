@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
-import books from '@root/src/api/routes/book.route';
+import books from '@src/api/routes/book.route';
 import user from '@api/routes/auth.route';
-import userDetail from '@root/src/api/routes/userDetail';
+import userDetail from '@src/api/routes/userDetail';
 import passport from '@api/middleware/passport.middleware';
 
 const router: Router = express.Router();

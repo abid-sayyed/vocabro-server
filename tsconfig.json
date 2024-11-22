@@ -2,26 +2,23 @@
   "compilerOptions": {
     "baseUrl": "./src", // Sets the root directory for module resolution
     "paths": {
-      "@root/*": [
+      "@src/*": [
         "*"
       ],
-      "@src/*": [
-        "src/*"
-      ],
       "@api/*": [
-        "src/api/*"
+        "api/*"
       ],
       "@config/*": [
-        "src/config/*"
+        "config/*"
       ],
       "@database/*": [
-        "src/database/*"
+        "database/*"
       ],
       "@models/*": [
-        "src/database/models/*"
+        "database/models/*"
       ],
       "@utils/*": [
-        "src/utils/*"
+        "utils/*"
       ],
     },
     "outDir": "./dist",
