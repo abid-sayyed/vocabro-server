@@ -67,6 +67,8 @@ const userAuthentications = async (
     },
   });
 
+  console.log('user', user);
+
   if (!user) {
     return { message: 'user not found', statusCode: 404 };
   }
