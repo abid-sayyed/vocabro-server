@@ -54,13 +54,13 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   const { username, email, password } = req.body;
 
   if (!password) {
-    res.statusCode = 400;
+    res.statusCode = 401;
     next(new Error('Password is required'));
     return;
   }
 
   if (!email && !username) {
-    res.statusCode = 400;
+    res.statusCode = 404;
     next(new Error('Either email or username must be provided'));
     return;
   }
@@ -69,6 +69,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   if (result.statusCode !== 200) {
     res.statusCode = result.statusCode;
     next(new Error(result.message));
+    return;
   }
 
   const { accessToken, refreshToken } = result;
