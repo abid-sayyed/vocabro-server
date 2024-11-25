@@ -41,7 +41,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
   });
 
   res.status(200).json({
-    message: 'Post request to the register: user created',
+    message: 'User registered successfully',
   });
 };
 
@@ -72,8 +72,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
-  const { accessToken, refreshToken } = result;
-
   res.cookie('accessToken', result.accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // secure cookies (https) in production
@@ -89,9 +87,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   });
 
   res.status(200).json({
-    message: 'Post request to the login: user found',
-    accessToken,
-    refreshToken,
+    message: 'login successful',
   });
 };
 
@@ -139,9 +135,7 @@ const refreshToken = async (
 
   res.status(200).json({
     status: 200,
-    message: 'Post request to the login: user found',
-    newAccessToken,
-    newRefreshToken,
+    message: 'success',
   });
 };
 
@@ -183,7 +177,7 @@ const logout = async (req: Request, res: Response) => {
   // Respond to the client
   res.status(200).json({
     status: 200,
-    message: 'User logged out',
+    message: 'Logout successful',
   });
 };
 

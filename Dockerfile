@@ -23,7 +23,7 @@ RUN npm install
 COPY . .
 
 # Copy .env file to the container (so the app can use it)
-COPY .env.production .env
+COPY .env.production .env.production
 
 # Build the TypeScript application
 RUN npm run build
