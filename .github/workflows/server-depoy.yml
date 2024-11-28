@@ -15,6 +15,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Debug Azure SSH Environment Variables
+      run: | 
+        echo "AZURE_SSH_USER: $AZURE_SSH_USER"
+        echo "AZURE_VM_IP: $AZURE_VM_IP"
+      
+
     - name: Deploy to Azure VM via SSH
       run: |
         ssh -i $AZURE_SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $AZURE_SSH_USER@$AZURE_VM_IP <<EOF
