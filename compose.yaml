@@ -11,7 +11,7 @@ services:
       - db
     command: ["dockerize", "-wait", "tcp://db:3306", "-timeout", "120s", "npm", "start"]
     networks:
-      - myapp-network
+      - nginx_network
 
   db:
     image: mysql:8
@@ -31,12 +31,12 @@ services:
       start_period: 30s
       timeout: 10s
     networks:
-      - myapp-network
+      - nginx_network
 
 volumes:
   mysql-data:
     driver: local
 
 networks:
-  myapp-network:
-    driver: bridge
+  nginx_network:
+    external: true
