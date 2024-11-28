@@ -17,8 +17,8 @@ jobs:
 
     - name: Debug Azure SSH Environment Variables
       run: | 
-        echo "AZURE_SSH_USER: $AZURE_SSH_USER"
-        echo "AZURE_VM_IP: $AZURE_VM_IP"
+        echo "AZURE_SSH_USER: ${{ secrets.AZURE_SSH_USER }}"
+        echo "AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}"
       
 
     - name: Deploy to Azure VM via SSH
