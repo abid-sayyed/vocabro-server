@@ -42,7 +42,3 @@ jobs:
             make logs-backend || exit 1
             exit
           EOF
-
-          # Clean up the private key file
-          rm -f azkey.pem || true
-          exit
