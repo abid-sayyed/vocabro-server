@@ -40,6 +40,5 @@ jobs:
             # Go to the root directory and build backend
             cd .. || exit 1
             make build-backend || exit 1
-            make logs-backend || exit 1
             exit
           EOF
