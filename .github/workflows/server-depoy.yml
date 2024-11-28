@@ -8,26 +8,29 @@ on:
 jobs:
   deploy:
     permissions:
-      contents: read  # Allow read access to the repository
+      contents: read 
     runs-on: ubuntu-latest
+
+    env:
+      AZURE_SSH_PRIVATE_KEY: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
+      AZURE_SSH_USER: ${{ secrets.AZURE_SSH_USER }}
+      AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Debug Azure SSH Environment Variables
+    - name: Test secret extraction
       run: |
-        if [ -z "${{ secrets.AZURE_SSH_USER }}" ] || [ -z "${{ secrets.AZURE_VM_IP }}" ]; then
-        echo "One or more secrets are missing"
-        else
-         echo "Secrets are available"
-        fi
-      
-      
+        # Echo the SSH user (safe for testing)
+        echo "SSH User: $AZURE_SSH_USER"
+        
+        # Echo the first few characters of the private key (safe for testing)
+        echo "Private key (first 10 chars): ${AZURE_SSH_PRIVATE_KEY:0:10}"
 
     - name: Deploy to Azure VM via SSH
       run: |
-        ssh -i $AZURE_SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $AZURE_SSH_USER@$AZURE_VM_IP <<EOF
+        ssh -i "$AZURE_SSH_PRIVATE_KEY" -o StrictHostKeyChecking=no "$AZURE_SSH_USER@$AZURE_VM_IP" <<EOF
         
           # Navigate to the project directory
           cd ./project/vocabro-server/ || exit 1
