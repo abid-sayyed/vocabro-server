@@ -49,7 +49,9 @@ jobs:
             cd .. || exit 1
             make build-frontend || exit 1
             make logs-frontend | tee build-logs.txt || exit 1
+            exit
           EOF
 
           # Clean up the private key file
-          rm -f azkey.pem
+          rm -f azkey.pem || true
+          exit
