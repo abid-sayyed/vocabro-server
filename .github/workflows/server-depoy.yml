@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      ACTIONS_STEP_DEBUG: true
       AZURE_SSH_PRIVATE_KEY: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
       AZURE_SSH_USER: ${{ secrets.AZURE_SSH_USER }}
       AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
