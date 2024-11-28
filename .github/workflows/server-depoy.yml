@@ -35,10 +35,10 @@ jobs:
             git checkout prod || exit 1
             git pull origin prod || exit 1
             
-            # Go to the root directory and build frontend
+            # Go to the root directory and build backend
             cd .. || exit 1
-            make build-frontend || exit 1
-            make logs-frontend || exit 1
+            make build-backend || exit 1
+            make logs-backend || exit 1
             exit
           EOF
 
