@@ -16,9 +16,13 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Debug Azure SSH Environment Variables
-      run: | 
-        echo "AZURE_SSH_USER: ${{ secrets.AZURE_SSH_USER }}"
-        echo "AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}"
+      run: |
+        if [ -z "${{ secrets.AZURE_SSH_USER }}" ] || [ -z "${{ secrets.AZURE_VM_IP }}" ]; then
+        echo "One or more secrets are missing"
+        else
+         echo "Secrets are available"
+        fi
+      
       
 
     - name: Deploy to Azure VM via SSH
