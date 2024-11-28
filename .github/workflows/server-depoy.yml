@@ -20,16 +20,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Test secret extraction
-        run: |
-          # Echo the SSH user (safe for testing)
-          echo "SSH User: $AZURE_SSH_USER"
-
-          echo "SSH IP: $AZURE_VM_IP"
-
-          # Echo the first few characters of the private key (safe for testing)
-          echo "Private key (first 10 chars): $AZURE_SSH_PRIVATE_KEY"
-
       - name: Deploy to Azure VM via SSH
         run: |
           # Write the private key to a file
@@ -48,7 +38,7 @@ jobs:
             # Go to the root directory and build frontend
             cd .. || exit 1
             make build-frontend || exit 1
-            make logs-frontend | tee build-logs.txt || exit 1
+            make logs-frontend || exit 1
             exit
           EOF
 
