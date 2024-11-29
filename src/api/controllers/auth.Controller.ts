@@ -28,14 +28,14 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
   res.cookie('accessToken', newUser.accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // secure cookies (https) in production
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
     maxAge: 15 * 60 * 1000, // token expiration (15 mins here)
   });
 
   res.cookie('refreshToken', newUser.refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week here / 7 days
   });
@@ -76,14 +76,14 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
   res.cookie('accessToken', result.accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // secure cookies (https) in production
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
     maxAge: 15 * 60 * 1000, // token expiration (15 mins here)
   });
 
   res.cookie('refreshToken', result.refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week here / 7 days
   });
@@ -123,14 +123,14 @@ const refreshToken = async (
 
   res.cookie('accessToken', newAccessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // secure cookies (https) in production
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
     maxAge: 15 * 60 * 1000, // token expiration (15 mins here)
   });
 
   res.cookie('refreshToken', newRefreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week here / 7 days
   });
@@ -151,14 +151,14 @@ const logout = async (req: Request, res: Response) => {
   // Explicitly set the cookies with empty values and immediate expiration
   res.cookie('accessToken', '', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
     expires: new Date(0), // Expire immediately
   });
 
   res.cookie('refreshToken', '', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
     expires: new Date(0),
   });
@@ -166,13 +166,13 @@ const logout = async (req: Request, res: Response) => {
   // Also use res.clearCookie for additional compatibility
   res.clearCookie('accessToken', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
   });
 
   res.clearCookie('refreshToken', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
     sameSite: 'strict',
   });
 
