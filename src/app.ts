@@ -30,7 +30,7 @@ const startServer = async () => {
   app.use(passport.initialize()); // Initialize passport
 
   // Health check route
-  app.get('/health', (req: Request, res: Response) => {
+  app.get('api/health', (req: Request, res: Response) => {
     res.json({ ok: true, environment: process.env.NODE_ENV });
   });
 

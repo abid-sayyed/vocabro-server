@@ -72,6 +72,8 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
+  console.log('resultnow', result);
+
   res.cookie('accessToken', result.accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // secure cookies (https) in production
